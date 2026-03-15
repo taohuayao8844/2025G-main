@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include "Mfft.h"
+#include "ad9959.h"
 
 /* USER CODE END Includes */
 
@@ -40,6 +41,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define MHZ(x)    ((uint32_t)((x) * 1000000UL))
+#define KHZ(x)    ((uint32_t)((x) * 1000UL))
+#define HZ(x)     ((uint32_t)(x))
 
 /* USER CODE END PD */
 
@@ -103,6 +107,15 @@ int main(void)
 
   /* 初始化 FFT 模块 */
   MFFT_Init();
+  printf("Init AD9959...\r\n");
+  Init_AD9959();
+  HAL_Delay(100);
+  // AD9959_SetChannel(0, 1000, 0, MHZ(3));//通道0，幅度1000，相位0，频率20MHz
+  AD9959_SetChannel(0, 1000, 0, KHZ(10));//通道0，幅度1000，相位0，频率10kHz
+  // AD9959_SetChannel(1, 1000, 0, MHZ(5));//通道0，幅度1000，相位0，频率20MHz
+  // AD9959_SetChannel(3, 1000, 0, MHZ(1));//通道0，幅度1000，相位0，频率20MHz
+  AD9959_IO_Update();
+  printf("AD9959 Init Done\r\n");
 
   printf("System started\r\n");
   printf("Sweep: %d ~ %d Hz, %d pts\r\n",
@@ -141,8 +154,17 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    MFFT_PerformSweep();
-    HAL_Delay(3000);
+    uint32_t freq_hz;
+
+    // MFFT_PerformSweep();
+    // HAL_Delay(3000);
+    for (freq_hz = KHZ(1); freq_hz <= KHZ(100); freq_hz += KHZ(1))
+    {
+      AD9959_SetChannel(0, 1000, 0, freq_hz);
+      AD9959_IO_Update();
+      printf("DDS CH0: %lu Hz\r\n", (unsigned long)freq_hz);
+      HAL_Delay(1000);
+    }
   }
   /* USER CODE END 3 */
 }

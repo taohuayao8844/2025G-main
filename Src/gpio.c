@@ -42,10 +42,51 @@
 void MX_GPIO_Init(void)
 {
 
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOD, SDIO3_Pin|SDIO2_Pin|SCLK_Pin|SDIO1_Pin
+                          |CS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, SDIO0_Pin|UPDATE_Pin|PS3_Pin|RST_Pin
+                          |PS2_Pin|PDC_Pin|PS1_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(PS0_GPIO_Port, PS0_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : SDIO3_Pin SDIO2_Pin SCLK_Pin SDIO1_Pin
+                           CS_Pin */
+  GPIO_InitStruct.Pin = SDIO3_Pin|SDIO2_Pin|SCLK_Pin|SDIO1_Pin
+                          |CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : SDIO0_Pin UPDATE_Pin PS3_Pin RST_Pin
+                           PS2_Pin PDC_Pin PS1_Pin */
+  GPIO_InitStruct.Pin = SDIO0_Pin|UPDATE_Pin|PS3_Pin|RST_Pin
+                          |PS2_Pin|PDC_Pin|PS1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PS0_Pin */
+  GPIO_InitStruct.Pin = PS0_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(PS0_GPIO_Port, &GPIO_InitStruct);
 
 }
 
